@@ -4,6 +4,7 @@ import os, random
 from scapy.all import Ether
 
 async def run():
+    delays = []
     nc = NATS()
 
     nats_url = os.getenv("NATS_SURVEYOR_SERVERS", "nats://nats:4222")
@@ -12,12 +13,13 @@ async def run():
     async def message_handler(msg):
         subject = msg.subject
         data = msg.data #.decode()
-        #print(f"Received a message on '{subject}': {data}")
+        print(f"Received a message on '{subject}': {data}")
         packet = Ether(data)
-        print(packet.show())
+        # print(packet.show())
         # Publish the received message to outpktsec and outpktinsec
-        #delay = random.expovariate(1 / 5e-6)
-        #await asyncio.sleep(delay)
+        delay = random.expovariate(1 / 5e-5)
+        delays.append(delay)
+        await asyncio.sleep(delay)
         if subject == "inpktsec":
             await nc.publish("outpktinsec", msg.data)
         else:
