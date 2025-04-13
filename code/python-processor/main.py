@@ -18,8 +18,8 @@ async def run():
         # print(packet.show())
         # Publish the received message to outpktsec and outpktinsec
         delay = random.expovariate(1 / 5e-5)
-        delays.append(delay)
-        await asyncio.sleep(delay)
+        # delays.append(delay)
+        # await asyncio.sleep(delay)
         if subject == "inpktsec":
             await nc.publish("outpktinsec", msg.data)
         else:
